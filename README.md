@@ -2,6 +2,10 @@
 
 Full-Stack Pipeline: Python → Message Broker → Go → NestJS → MongoDB → React
 
+------------------
+![Exemplo de Interface](assets/home.png)
+------------------
+
 ## Status da Implementação Atual
 
 
