@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672" # painel
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+
+  nest-api:
+    build: ./api
+    container_name: nest-api
+    env_file: ./api/.env
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+
+  producer-python:
+    build: ./producer-python
+    container_name: producer-python
+    env_file: ./producer-python/.env
+    depends_on:
+      - rabbitmq
+    restart: always
+
+  worker-go:
+    build: ./worker-go
+    container_name: worker-go
+    env_file: ./worker-go/.env
+    depends_on:
+      - rabbitmq
+      - nest-api
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - nest-api
+
+volumes:
+  mongo-data:

@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Se quiser usar shadcn: */
+@plugin "tailwindcss-animate";
+
+/* estilos globais opcionais: */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}

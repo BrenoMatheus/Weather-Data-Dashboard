@@ -1,0 +1,28 @@
+# Diretórios de Módulo
+# Esta linha ignora a pasta de dependências do Node.js em qualquer nível do projeto.
+node_modules
+
+# Arquivos de Log e Erro
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log*
+
+# Diretórios de Compilação (Vite/Next/TypeScript)
+dist
+build
+.tsbuildinfo
+out
+
+# Variáveis de Ambiente
+.env
+.env.local
+.env.*.local
+
+# Dados Específicos do MongoDB
+# Esta linha ignora a pasta de dados local do MongoDB
+# O nome pode variar; use o nome exato da pasta.
+mongo-data/
+
+# Diretórios e Arquivos Específicos de SO
+.DS_Store
+Thumbs.db

@@ -1,0 +1,5 @@
+pika
+confluent-kafka
+pydantic
+python-dotenv
+requests

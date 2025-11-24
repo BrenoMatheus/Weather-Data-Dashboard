@@ -1,0 +1,17 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  // ADICIONE ESTE BLOCO:
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
+    "jsx": "react-jsx",
+    // Estas duas linhas são o que o shadcn/ui está procurando
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"] 
+    }
+  }
+}
