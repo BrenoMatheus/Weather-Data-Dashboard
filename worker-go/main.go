@@ -55,9 +55,10 @@ func main() {
 
 	rabbitURL := os.Getenv("RABBIT_URL")
 	nestURL := os.Getenv("NEST_API_URL")
+	apiKey := os.Getenv("INTERNAL_API_KEY")
 
-	if rabbitURL == "" || nestURL == "" {
-		log.Fatal("Erro: variáveis RABBIT_URL e NEST_API_URL são obrigatórias")
+	if rabbitURL == "" || nestURL == "" || apiKey == "" {
+		log.Fatal("Erro: variáveis RABBIT_URL, NEST_API_URL e INTERNAL_API_KEY são obrigatórias")
 	}
 
 	conn, ch := connectRabbit(rabbitURL)
@@ -82,14 +83,29 @@ func main() {
 
 		// Enviar para API com retry
 		for i := 1; i <= 3; i++ {
-			resp, err := client.Post(nestURL, "application/json", bytes.NewBuffer(body))
+			req, err := http.NewRequest("POST", nestURL, bytes.NewBuffer(body))
+			if err != nil {
+				log.Println("Erro ao criar request:", err)
+				continue
+			}
+
+			// 🔥 Aqui aplicamos a API Key
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("x-api-key", apiKey)
+
+			resp, err := client.Do(req)
 
 			if err == nil && resp.StatusCode < 300 {
 				log.Println("✔ Dados enviados com sucesso ao Nest API!")
 				break
 			}
 
-			log.Printf("Erro ao enviar para API (tentativa %d): %v\n", i, err)
+			if resp != nil {
+				log.Printf("Falha ao enviar (status %d), tentativa %d\n", resp.StatusCode, i)
+			} else {
+				log.Printf("Erro ao enviar (tentativa %d): %v\n", i, err)
+			}
+
 			time.Sleep(3 * time.Second)
 		}
 	}
