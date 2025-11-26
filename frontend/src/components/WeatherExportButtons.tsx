@@ -21,7 +21,7 @@ export function WeatherExportButtons() {
     <div className="flex gap-4 mb-6">
       <button
         onClick={() =>
-          downloadFile(`${API_BASE}/weather/export.csv`, "weather.csv")
+          downloadFile(`${API_BASE}/weather/export/csv`, "weather.csv")
         }
         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
       >
@@ -30,7 +30,7 @@ export function WeatherExportButtons() {
 
       <button
         onClick={() =>
-          downloadFile(`${API_BASE}/weather/export.xlsx`, "weather.xlsx")
+          downloadFile(`${API_BASE}/weather/export/xlsx`, "weather.xlsx")
         }
         className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
       >
