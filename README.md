@@ -6,6 +6,12 @@ Full-Stack Pipeline: Python → Message Broker → Go → NestJS → MongoDB →
 ![Exemplo de Interface](assets/home.png)
 ------------------
 
+### Demonstração do Projeto
+
+Assista ao vídeo demonstrativo completo sobre o **Weather Monitoring System** para entender a coleta e processamento de dados climáticos.
+
+[▶️ Vídeo: Weather Monitoring System — Coleta, Processamento e Armazenamento de Dados Climáticos](http://www.youtube.com/watch?v=maQ7VbAo32I)
+
 ## Status da Implementação Atual
 
 
