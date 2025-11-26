@@ -1,6 +1,6 @@
 import { AuthForm } from "../components/AuthForm";
 import { login } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -16,13 +16,20 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthForm
-      title="Login"
-      onSubmit={handleLogin}
-      fields={[
-        { name: "email", label: "Email", type: "email" },
-        { name: "password", label: "Senha", type: "password" },
-      ]}
-    />
+    <div className="">
+      <AuthForm
+        title="Login"
+        onSubmit={handleLogin}
+        fields={[
+          { name: "email", label: "Email", type: "email" },
+          { name: "password", label: "Senha", type: "password" },
+        ]}
+      />
+      <span className="flex justify-center p-2">Não tem conta? 
+        <Link className="pl-2 font-bold text-slate-700" to="/register">
+           Criar conta
+        </Link>
+      </span>
+    </div>
   );
 }
