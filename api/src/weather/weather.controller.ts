@@ -40,7 +40,7 @@ export class WeatherController {
    */
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findAll(@Query('limit') limit = '100', @Query('skip') skip = '0') {
+  async findAll(@Query('limit') limit = '20', @Query('skip') skip = '0') {
     const l = Math.max(1, Math.min(1000, parseInt(limit as string, 10) || 100));
     const s = Math.max(0, parseInt(skip as string, 10) || 0);
     return this.weatherService.findAll(l, s);

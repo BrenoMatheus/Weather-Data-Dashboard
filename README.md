@@ -144,3 +144,11 @@ docker-compose.yml
 ```bash
 docker-compose up -d --build
 ```
+
+## Rotas
+
+* Api
+http://localhost:3000/api/
+
+* Frontend
+http://localhost:8000

@@ -35,6 +35,7 @@ export function AuthForm({ title, onSubmit, fields }: any) {
         >
           {title}
         </button>
+        
       </form>
     </div>
   );
