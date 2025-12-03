@@ -6,11 +6,11 @@ function getAuthToken() {
   return localStorage.getItem("token");
 }
 
-// GET Weather
-export async function getWeather() {
+// GET Weather com paginação
+export async function getWeather(limit = 20, skip = 0) {
   const token = getAuthToken();
 
-  const res = await fetch(`${API_BASE}/weather`, {
+  const res = await fetch(`${API_BASE}/weather?limit=${limit}&skip=${skip}`, {
     headers: {
       "Authorization": token ? `Bearer ${token}` : "",
     },
@@ -19,6 +19,19 @@ export async function getWeather() {
   if (!res.ok) throw new Error("Erro ao buscar weather");
   return res.json();
 }
+
+
+// GET Insight
+export async function getInsight(data: any) {
+  const res = await fetch(`${API_BASE}/insights`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data: data })
+  });
+
+  return await res.json();
+}
+
 
 // POST Weather
 export async function createWeather(data: any) {

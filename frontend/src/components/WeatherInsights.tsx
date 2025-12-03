@@ -1,63 +1,107 @@
-import { useMemo } from "react";
+import { useState } from "react";
+import { getInsight } from "../api/weatherApi"; // você já registrou essa função
 
-/**
- * Componente simples para gerar "insights" baseados apenas em lógica
- * sem uso de IA externa.
- *
- * Props esperadas:
- *  - data: Array<{ temperature: number, windspeed: number, rain: number }>
- */
-// Definição do Tipo de Dados Climáticos
-interface WeatherData {
-  temperature: number;
-  windspeed: number;
-  rain?: number; 
+export interface InsightRequest {
+  data: string;
 }
 
-interface WeatherInsightsProps {
-    data: WeatherData[]; // 'data' é um Array de objetos WeatherData
+export interface WeatherInsight {
+  title: string;
+  summary: string;
+  opportunity: string;
+  action: string;
 }
 
-export function WeatherInsights({ data = [] }:WeatherInsightsProps) {
-  // Gera insights básicos usando regras fixas
-  const insights = useMemo(() => {
-    if (!data.length) return [];
+export default function WeatherInsights({ data }: InsightRequest) {
+  const [loading, setLoading] = useState(false);
+  const [insight, setInsight] = useState<WeatherInsight | null>(null);
+  const [error, setError] = useState("");
 
-    const temps = data.map((d) => d.temperature);
-    const winds = data.map((d) => d.windspeed);
-    const rains = data.map((d) => d.rain ?? 0);
+  async function handleGenerate() {
+    setLoading(true);
+    setInsight(null);
+    setError("");
 
-    const avgTemp = temps.reduce((a, b) => a + b, 0) / temps.length;
-    const maxWind = Math.max(...winds);
-    const rainChance = rains.some((r) => r > 0) ? "Alta" : "Baixa";
-
-    const insightsList = [];
-
-    // Insight 1 – Temperatura média
-    if (avgTemp > 30) insightsList.push("A média de temperatura está alta hoje, prepare-se para calor.");
-    else if (avgTemp < 18) insightsList.push("A média de temperatura está baixa, pode ser um dia frio.");
-    else insightsList.push("Temperatura média agradável ao longo do dia.");
-
-    // Insight 2 – Vento
-    if (maxWind > 30) insightsList.push("Rajadas de vento fortes previstas, cuidado ao dirigir.");
-    else if (maxWind > 15) insightsList.push("Vento moderado esperado ao longo do dia.");
-    else insightsList.push("Pouco vento, condições estáveis.");
-
-    // Insight 3 – Chuva
-    if (rainChance === "Alta") insightsList.push("Chance elevada de chuva — leve guarda-chuva.");
-    else insightsList.push("Baixa probabilidade de chuva.");
-
-    return insightsList;
-  }, [data]);
+    try {
+      const response = await getInsight(data.trim());
+      setInsight(response.insight); // <- aqui precisa garantir que insight está no formato WeatherInsight
+    } catch (err) {
+      setError("Erro ao gerar insight.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <div className="p-4 bg-white rounded-xl shadow-md space-y-3">
-      <h2 className="text-xl font-semibold">Insights Climáticos</h2>
-      <ul className="list-disc ml-5 space-y-1">
-        {insights.map((item, index) => (
-          <li key={index} className="text-gray-700">{item}</li>
-        ))}
-      </ul>
+    <div
+      style={{
+        maxWidth: "600px",
+        margin: "30px auto",
+        padding: "20px",
+        borderRadius: "16px",
+        background: "#ffffff",
+        boxShadow: "0 8px 25px rgba(0, 0, 0, 0.08)",
+        fontFamily: "Inter, sans-serif"
+      }}
+    >
+      <h2
+        style={{
+          margin: 0,
+          marginBottom: "16px",
+          fontSize: "1.5rem",
+          fontWeight: 600,
+          color: "#333"
+        }}
+      >
+        Weather Insights ☁️
+      </h2>
+
+      <button
+        onClick={handleGenerate}
+        disabled={loading}
+        style={{
+          marginTop: "12px",
+          width: "100%",
+          padding: "12px",
+          background: loading ? "#999" : "#4f46e5",
+          color: "#fff",
+          border: "none",
+          borderRadius: "10px",
+          fontSize: "1rem",
+          cursor: loading ? "not-allowed" : "pointer",
+          transition: "0.2s"
+        }}
+      >
+        {loading ? "Gerando insight..." : "Gerar Insight"}
+      </button>
+
+      {/* ERRO */}
+      {error && (
+        <p className="mt-4 text-red-500 font-medium text-center">
+          {error}
+        </p>
+      )}
+
+      {/* INSIGHT */}
+      {insight && (
+        <div className="p-4 mt-4 rounded-xl bg-white shadow-sm border space-y-2">
+          <h2 className="text-lg font-semibold text-blue-600">
+            {insight.title}
+          </h2>
+
+          <p className="text-gray-700">{insight.summary}</p>
+
+          <div>
+            <h3 className="font-medium text-gray-800">Oportunidade</h3>
+            <p className="text-gray-600">{insight.opportunity}</p>
+          </div>
+
+          <div>
+            <h3 className="font-medium text-gray-800">Ação Recomendada</h3>
+            <p className="text-gray-600">{insight.action}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
