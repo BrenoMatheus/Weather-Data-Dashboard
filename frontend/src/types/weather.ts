@@ -1,43 +1,24 @@
 // types/weather.ts
-export interface CurrentWeather {
-  interval: number;
-  is_day: number;
-  temperature: number;
-  time: string;
-  weathercode: number;
-  winddirection: number;
-  windspeed: number;
-}
 
 export interface WeatherRaw {
-  current_weather: CurrentWeather;
-  current_weather_units: {
-    interval: string;
-    is_day: string;
-    temperature: string;
-    time: string;
-    weathercode: string;
-    winddirection: string;
-    windspeed: string;
-  };
-  elevation: number;
-  generationtime_ms: number;
+  is_day: number;          // 1 dia / 0 noite
   latitude: number;
   longitude: number;
-  timezone: string;
-  timezone_abbreviation: string;
-  utc_offset_seconds: number;
+  temperature: number;
+  time: string;            // "2025-12-03T21:30"
+  weathercode: number;     // "wmo code"
+  winddirection: number;
+  windspeed: number;
 }
 
 export interface WeatherData {
   _id: string;
   raw: WeatherRaw;
-  temperature: number;
-  windspeed: number;
-  timestamp: string;
+  timestamp: string;       // igual ao raw.time
   meta: any | null;
   createdAt: string;
   updatedAt: string;
   __v: number;
 }
+
 

@@ -23,7 +23,23 @@ def connect_rabbit():
 def fetch_weather():
     url = f"{METEO_URL}?latitude={LAT}&longitude={LON}&current_weather=true"
     r = requests.get(url)
-    return r.json()
+    raw = r.json()
+
+    # 🔥 Limpeza — só enviar o que realmente é utilizado pelo frontend
+    cleaned = {
+        "temperature": raw["current_weather"]["temperature"],
+        "windspeed": raw["current_weather"]["windspeed"],
+        "winddirection": raw["current_weather"]["winddirection"],
+        "weathercode": raw["current_weather"]["weathercode"],
+        "is_day": raw["current_weather"]["is_day"],
+        "time": raw["current_weather"]["time"],
+
+        # Localização (mínima)
+        "latitude": raw["latitude"],
+        "longitude": raw["longitude"]
+    }
+
+    return cleaned
 
 def main():
     conn, channel = connect_rabbit()
@@ -32,8 +48,14 @@ def main():
     while True:
         data = fetch_weather()
         msg = json.dumps(data)
-        channel.basic_publish(exchange="", routing_key="weather_queue", body=msg)
-        print("Enviado:", msg)
+
+        channel.basic_publish(
+            exchange="",
+            routing_key="weather_queue",
+            body=msg
+        )
+
+        print("Enviado (limpo):", msg)
         time.sleep(POLL)
 
 if __name__ == "__main__":

@@ -31,19 +31,19 @@ export default function HomePage() {
           Temperatura: ${lastWeather.temperature}°C
           Vento: ${lastWeather.windspeed} km/h
           Horário: ${lastWeather.timestamp}
-          Código do clima (WMO): ${lastWeather.raw?.current_weather?.weathercode}
+          Código do clima (WMO): ${lastWeather.raw?.weathercode}
           Latitude: ${lastWeather.raw?.latitude}
           Longitude: ${lastWeather.raw?.longitude}
         `;
 
         setDataInsight(formatted);
         setWeatherCards(data);
-
+        console.log(data);
         setWeatherChart(
           data.map((item: any) => ({
             timestamp: item.timestamp,
-            temperature: item.temperature,
-            windspeed: item.windspeed,
+            temperature: item.raw.temperature,
+            windspeed: item.raw.windspeed,
           }))
         );
       } catch (err) {
